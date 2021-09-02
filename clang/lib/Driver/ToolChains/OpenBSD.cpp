@@ -309,15 +309,15 @@ std::string OpenBSD::getCompilerRT(const ArgList &Args,
     SmallString<128> Path(getDriver().SysRoot);
     llvm::sys::path::append(Path, "/usr/lib/libcompiler_rt.a");
     return std::string(Path.str());
-  } else {
-    SmallString<128> P(getDriver().ResourceDir);
-    std::string CRTBasename =
-        getCompilerRTBasename(Args, Component, Type, /*AddArch=*/false);
-    llvm::sys::path::append(P, "lib", CRTBasename);
-    if (getVFS().exists(P))
-      return std::string(P.str());
-    return ToolChain::getCompilerRT(Args, Component, Type);
   }
+  SmallString<128> P(getDriver().ResourceDir);
+  std::string CRTBasename =
+    buildCompilerRTBasename(Args, Component, Type, /*AddArch=*/false);
+  llvm::sys::path::append(P, "lib", CRTBasename);
+  // Checks if this is the base system case which uses a different location.
+  if (getVFS().exists(P))
+    return std::string(P.str());
+  return ToolChain::getCompilerRT(Args, Component, Type);
 }
 
 Tool *OpenBSD::buildAssembler() const {

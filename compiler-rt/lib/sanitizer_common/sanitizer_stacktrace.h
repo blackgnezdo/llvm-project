@@ -22,7 +22,7 @@ static const u32 kStackTraceMax = 256;
 
 #if SANITIZER_LINUX && defined(__mips__)
 # define SANITIZER_CAN_FAST_UNWIND 0
-#elif SANITIZER_WINDOWS
+#elif SANITIZER_WINDOWS || SANITIZER_OPENBSD
 # define SANITIZER_CAN_FAST_UNWIND 0
 #else
 # define SANITIZER_CAN_FAST_UNWIND 1
@@ -31,7 +31,7 @@ static const u32 kStackTraceMax = 256;
 // Fast unwind is the only option on Mac for now; we will need to
 // revisit this macro when slow unwind works on Mac, see
 // https://github.com/google/sanitizers/issues/137
-#if SANITIZER_MAC || SANITIZER_OPENBSD || SANITIZER_RTEMS
+#if SANITIZER_MAC || SANITIZER_RTEMS
 # define SANITIZER_CAN_SLOW_UNWIND 0
 #else
 # define SANITIZER_CAN_SLOW_UNWIND 1
